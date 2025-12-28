@@ -1431,6 +1431,7 @@ def parse_args() -> None:
             chars = ascii_uppercase + ascii_lowercase + digits + punctuation
         chars = tuple(chars)
 
+    # Set the default length
     if args.length is None:
         if diceware:
             length = 10
