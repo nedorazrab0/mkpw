@@ -1,0 +1,39 @@
+name: rls
+on: workflow_dispatch
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Delete old release
+        run: gh release delete release --cleanup-tag -y || true
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Make a zipapp
+        run: |
+          cd ./zipapp
+          cp ../LICENSE .
+          sha256sum --tag ./* > ../checksum.sha256
+          python3 -m zipapp -c -p '/usr/bin/env python3' -o ../mkpw .
+
+      - name: Compress
+        run: |
+          zip -9 ./mkpw.zip -- ./LICENSE ./mkpw ./mkpw.cmd \
+            ./checksum.sha256
+
+      - name: Make a checksum
+        run: |
+          sha256sum --tag ./mkpw.zip > mkpw.zip.sha256
+
+      - name: Release
+        run: |
+          gh release create release ./mkpw.zip ./mkpw.zip.sha256 \
+            --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}
