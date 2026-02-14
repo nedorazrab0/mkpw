@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # SPDX-License-Identifier: 0BSD
 
 def get_wordlist() -> tuple:
