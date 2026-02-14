@@ -19,7 +19,7 @@ def make_password(
             custom_chars if custom_chars else "",
             ascii_lowercase, ascii_uppercase, digits
         )
-        required_chars = tuple(choice(charset) for charset in (charsets)
+        required_chars = tuple(choice(charset) for charset in charsets
                                if charset)
         extra_length = length - sum(1 if charset else 0 for charset in charsets)
         charset = "".join(charsets)
